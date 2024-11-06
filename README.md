@@ -18,7 +18,7 @@ https://www.linkedin.com/feed/update/urn:li:activity:7259418302744002561/?update
 7) Proxy vs Reverse Proxy: https://lnkd.in/gMTtidBq
 8) Load Balancing: https://lnkd.in/gvxfwEUr
 9) API Gateway: https://lnkd.in/gd6t2Pua
-10) Latency vs Throughput: https://lnkd.in/g_amhAtN
+10) Latency vs Throughput: https://lnkd.in/g_amhAtN -- ok
 11) Distributed Caching: https://lnkd.in/gf6pCqdi
 12) Caching Strategies: https://lnkd.in/dVk7nZ_Y
 13) SQL vs NoSQL: https://lnkd.in/gW_xxyWX
