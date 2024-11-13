@@ -1,3 +1,17 @@
+- PostgreSQL
+-MySQL
+-Redis
+-MongoDB
+-Cassandra
+-Elasticsearch
+-Neo4j
+-Firebase Firestore
+-DynamoDB
+-SQLite
+
+-----------------------------
+
+
 One of the biggest decisions we make while designing a system is choosing between a relational (SQL) or non-relational (NoSQL) database.
 
 
