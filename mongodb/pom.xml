@@ -11,7 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>postgresql</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>redis</name>
+	<name>mongodb</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -45,7 +45,7 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
 	</dependencies>
 
