@@ -27,7 +27,7 @@ https://www.linkedin.com/feed/update/urn:li:activity:7259418302744002561/?update
 16) Database Scaling: https://lnkd.in/gSUtAwc7
 17) SPOF: https://lnkd.in/gw_uHZWn
 18) Message Queues: https://lnkd.in/g-jnNGDC
-19) WebSockets: https://lnkd.in/gD-TUZep
+19) WebSockets: https://lnkd.in/gD-TUZep -- ok
 20) Rate Limiting: https://lnkd.in/gYDxg8XY -- ok
 21) Consensus: https://lnkd.in/ggc3tFbr
 22) Idempotency: https://lnkd.in/gDB3AJij
