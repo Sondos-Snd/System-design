@@ -54,6 +54,161 @@ A failback operation involves returning production to its original location afte
 
 Typically, systems designers offer failover capability in systems, servers, or networks demanding CA, HA, or a high level of reliability. Failover practices have also become less reliant on physical hardware with little or no disruption in service thanks to the use of virtualization software.
 
+
+---------------------------------
+
+
+Failover recovery in a **Spring Boot/Angular project** ensures that the application remains functional and accessible even when part of the system fails. Here's a step-by-step guide to implement failover recovery:
+
+---
+
+### **1. Understand the Types of Failures**
+- **Backend Service Failure:** A microservice or database goes down.
+- **Frontend Service Failure:** Angular frontend can't connect to the backend or the CDN fails.
+- **Infrastructure Failure:** Server, container, or network issues.
+
+---
+
+### **2. Backend: Spring Boot Failover Recovery**
+#### a. **Enable Circuit Breaker with Resilience4j or Spring Cloud**
+Use **Resilience4j** for handling failures gracefully:
+- Add dependencies:
+  ```xml
+  <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-spring-boot2</artifactId>
+      <version>1.7.1</version>
+  </dependency>
+  ```
+- Annotate service methods:
+  ```java
+  @Service
+  public class MyService {
+
+      @CircuitBreaker(name = "myService", fallbackMethod = "fallbackMethod")
+      public String callExternalService() {
+          // Logic to call external service
+      }
+
+      public String fallbackMethod(Throwable t) {
+          return "Fallback response";
+      }
+  }
+  ```
+
+#### b. **Load Balancer**
+Use **Spring Cloud LoadBalancer** for automatic failover between replicas:
+- Add dependencies:
+  ```xml
+  <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+  </dependency>
+  ```
+
+#### c. **Retry Mechanism**
+Enable retries for transient errors:
+- Configuration in `application.yml`:
+  ```yaml
+  resilience4j.retry:
+    instances:
+      myService:
+        maxAttempts: 3
+        waitDuration: 200ms
+  ```
+
+#### d. **Failover Database Setup**
+Use primary/secondary database configurations:
+- Define multiple data sources in `application.yml`:
+  ```yaml
+  spring:
+    datasource:
+      url: jdbc:mysql://primary-db-url
+    failover-datasource:
+      url: jdbc:mysql://secondary-db-url
+  ```
+
+---
+
+### **3. Frontend: Angular Failover Recovery**
+#### a. **Retry Failed HTTP Calls**
+Use **HttpClient Interceptors**:
+```typescript
+@Injectable()
+export class RetryInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(req).pipe(
+      retry(3), // Retry up to 3 times
+      catchError((error) => {
+        console.error('Failed HTTP call:', error);
+        return throwError(() => new Error('Failed HTTP call'));
+      })
+    );
+  }
+}
+```
+
+#### b. **Fallback UI/Offline Mode**
+- Implement **Service Workers** for offline caching:
+  ```bash
+  ng add @angular/pwa
+  ```
+- Show fallback UI when backend is unavailable:
+  ```typescript
+  if (!this.backendAvailable) {
+    this.message = 'Service is currently unavailable. Please try again later.';
+  }
+  ```
+
+---
+
+### **4. Monitoring and Alerts**
+- Use **Spring Boot Actuator** to monitor system health:
+  ```xml
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+  </dependency>
+  ```
+- Enable health checks:
+  ```yaml
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health
+  ```
+
+---
+
+### **5. Infrastructure Setup**
+#### a. **Use Kubernetes or Docker Swarm**
+- Deploy replicas for Spring Boot services.
+- Use health probes for automatic failover:
+  ```yaml
+  livenessProbe:
+    httpGet:
+      path: /actuator/health
+      port: 8080
+    initialDelaySeconds: 3
+    periodSeconds: 5
+  ```
+
+#### b. **Frontend Failover with CDN**
+- Use multiple CDN providers to host Angular assets (e.g., Cloudflare, AWS S3).
+- Configure fallback URLs in the Angular service worker.
+
+---
+
+### **6. Testing Failover**
+- Simulate backend and frontend failures.
+- Test retries, circuit breakers, and fallback mechanisms.
+- Use chaos engineering tools like **Chaos Monkey** to induce failures and verify recovery.
+
+---
+
+By combining these backend and frontend strategies with robust infrastructure, you can achieve reliable failover recovery in your Spring Boot/Angular project.
+
 Does Druva offer a cloud failover strategy?
 With single-click failback to the primary site, post-event mitigation, Druva offers something unique in the industry. A simple, identical configuration of your primary and failover VMs is the first step. Data transfer starts once virtual machine disks are attached, and once transfer is completed, DNS connections are redirected and primary VMs are rebooted.
 
